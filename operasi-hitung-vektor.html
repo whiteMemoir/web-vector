@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Vektor Kalkulator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      margin: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .vektor-input {
+      display: block;
+      margin: 5px 0;
+      width: 30px;
+    }
+
+    .vektor-label {
+      margin-right: 15px;
+    }
+
+    .operasi-simbol {
+      font-size: 24px;
+      margin: 0 30px 0 10px;
+    }
+
+    .svg-icon {
+      vertical-align: middle;
+      fill: currentColor;
+      overflow: hidden;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-right: 10px;
+    }
+
+    .bracket {
+      vertical-align: middle;
+      overflow: hidden;
+      width: 5em;
+      height: 5em;
+    }
+
+    .hasil-container {
+      display: flex;
+      flex-direction: column;
+      /* Menyusun anak-anak secara vertikal */
+      align-items: center;
+      /* Menengahkan anak-anak secara horizontal */
+    }
+
+    #hasil {
+      display: flex;
+      align-items: center;
+      /* Akan menengahkan elemen vertikal */
+      justify-content: center;
+      /* Menyusun elemen secara horizontal */
+    }
+
+    .vektor-result {
+      display: inline-block;
+      /* Center align the result */
+      margin: 5px 0;
+      /* Spacing between results */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Vektor Kalkulator</h2>
+
+    <div class="form-group">
+      <label>Jumlah Dimensi:</label>
+      <select id="dimensi" onchange="updateInputFields()">
+        <option value="2">2D</option>
+        <option value="3" selected>3D</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <span class="vektor-label">Vektor A</span>
+      <svg class="svg-icon" id="svgA" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M413.8 515.3c0-86.6 12.5-163 37.5-229.3 25-66.3 68.6-139.9 131-221h47.5c-61.4 78.5-105.2 151.4-131.4 218.8-26.2 67.4-39.2 144.9-39.2 232.5 0 87.9 13.1 165.7 39.5 233.5 26.3 67.7 70 140.5 131.1 218.3h-47.5c-60.4-77.2-103.6-149.7-129.5-217.6-26.1-67.9-39-146.3-39-235.2z" />
+      </svg>
+      <div class="input-group" id="inputsA"></div>
+      <svg class="svg-icon" id="svgAEnd" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M551.6 750.5c-26 67.9-69.1 140.4-129.5 217.6h-47.5c61.1-77.8 104.8-150.6 131.1-218.3 26.3-67.7 39.5-145.5 39.5-233.5 0-87.6-13.1-165-39.2-232.5-26.3-67.4-70-140.3-131.5-218.8H422c62.4 81.1 106 154.8 131 221 25 66.3 37.5 142.7 37.5 229.3 0 88.9-13 167.3-38.9 235.2z" />
+      </svg>
+      <div class="operasi-simbol" id="operasiSimbol">+</div>
+      <span class="vektor-label">Vektor B</span>
+      <svg class="svg-icon" id="svgB" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M413.8 515.3c0-86.6 12.5-163 37.5-229.3 25-66.3 68.6-139.9 131-221h47.5c-61.4 78.5-105.2 151.4-131.4 218.8-26.2 67.4-39.2 144.9-39.2 232.5 0 87.9 13.1 165.7 39.5 233.5 26.3 67.7 70 140.5 131.1 218.3h-47.5c-60.4-77.2-103.6-149.7-129.5-217.6-26.1-67.9-39-146.3-39-235.2z" />
+      </svg>
+      <div class="input-group" id="inputsB"></div>
+      <svg class="svg-icon" id="svgBEnd" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M551.6 750.5c-26 67.9-69.1 140.4-129.5 217.6h-47.5c61.1-77.8 104.8-150.6 131.1-218.3 26.3-67.7 39.5-145.5 39.5-233.5 0-87.6-13.1-165-39.2-232.5-26.3-67.4-70-140.3-131.5-218.8H422c62.4 81.1 106 154.8 131 221 25 66.3 37.5 142.7 37.5 229.3 0 88.9-13 167.3-38.9 235.2z" />
+      </svg>
+    </div>
+
+    <button onclick="hitungOperasi('tambah')">Penjumlahan</button>
+    <button onclick="hitungOperasi('kurang')">Pengurangan</button>
+    <button onclick="hitungOperasi('dotProduct')">Produk Dot</button>
+
+    <div class="form-group">
+      <a href="transformasi_matriks.html" class="button-link">Ke Transformasi Matriks</a>
+    </div>
+
+    <h3>Hasil :</h3>
+    <div id="hasil">
+      <svg class="bracket" id="leftBracket" style="display: none;" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M413.8 515.3c0-86.6 12.5-163 37.5-229.3 25-66.3 68.6-139.9 131-221h47.5c-61.4 78.5-105.2 151.4-131.4 218.8-26.2 67.4-39.2 144.9-39.2 232.5 0 87.9 13.1 165.7 39.5 233.5 26.3 67.7 70 140.5 131.1 218.3h-47.5c-60.4-77.2-103.6-149.7-129.5-217.6-26.1-67.9-39-146.3-39-235.2z" />
+      </svg>
+      <!-- Placeholders for the result -->
+      <div id="resultContainer" class="hasil-container" style="display: none;"></div>
+      <svg class="bracket" id="rightBracket" style="display: none;" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M551.6 750.5c-26 67.9-69.1 140.4-129.5 217.6h-47.5c61.1-77.8 104.8-150.6 131.1-218.3 26.3-67.7 39.5-145.5 39.5-233.5 0-87.6-13.1-165-39.2-232.5-26.3-67.4-70-140.3-131.5-218.8H422c62.4 81.1 106 154.8 131 221 25 66.3 37.5 142.7 37.5 229.3 0 88.9-13 167.3-38.9 235.2z" />
+      </svg>
+    </div>
+
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      updateInputFields(); // Panggil saat halaman dimuat
+    });
+
+    function updateInputFields() {
+      let dimensi = document.getElementById("dimensi").value;
+      let inputsA = "";
+      let inputsB = "";
+
+      // Update SVG icon size based on the dimension
+      updateSvgIconSize(dimensi);
+
+      for (let i = 1; i <= dimensi; i++) {
+        inputsA += `<input type="number" class="vektor-input" id="vektorA${i}">`;
+        inputsB += `<input type="number" class="vektor-input" id="vektorB${i}">`;
+      }
+
+      document.getElementById("inputsA").innerHTML = inputsA;
+      document.getElementById("inputsB").innerHTML = inputsB;
+    }
+
+    function updateSvgIconSize(dimensi) {
+      let size = dimensi === "2" ? "5em" : "6em";
+      document.getElementById("svgA").style.width = size;
+      document.getElementById("svgAEnd").style.width = size;
+      document.getElementById("svgB").style.width = size;
+      document.getElementById("svgBEnd").style.width = size;
+    }
+
+    function getVektorValues(prefix, dimensi) {
+      let vektor = [];
+      for (let i = 1; i <= dimensi; i++) {
+        vektor.push(Number(document.getElementById(prefix + i).value) || 0);
+      }
+      return vektor;
+    }
+
+    function hitungOperasi(operasi) {
+      let dimensi = document.getElementById("dimensi").value;
+      let vektorA = getVektorValues("vektorA", dimensi);
+      let vektorB = getVektorValues("vektorB", dimensi);
+      let hasil;
+      let simbol;
+
+      switch (operasi) {
+        case "tambah":
+          hasil = tambahVektor(vektorA, vektorB);
+          simbol = "+";
+          break;
+        case "kurang":
+          hasil = kurangVektor(vektorA, vektorB);
+          simbol = "−";
+          break;
+        case "dotProduct":
+          hasil = dotProduct(vektorA, vektorB);
+          simbol = "·";
+          break;
+      }
+
+      document.getElementById("operasiSimbol").innerText = simbol;
+      tampilkanHasilVertikal(hasil, operasi);
+    }
+
+    function tampilkanHasilVertikal(hasil, operasi) {
+      let hasilContainer = document.getElementById("resultContainer");
+      hasilContainer.innerHTML = ""; // Clear previous results
+
+      // Add result elements
+      hasil.forEach(function (element) {
+        let elemDiv = document.createElement("div");
+        elemDiv.innerText = element;
+        elemDiv.classList.add("vektor-result");
+        hasilContainer.appendChild(elemDiv);
+      });
+      // Add opening bracket SVG if not a dotProduct operation
+      showBrackets(operasi !== "dotProduct");
+      hasilContainer.style.display = "flex";
+    }
+
+    function showBrackets(show) {
+      let leftBracket = document.getElementById("leftBracket");
+      let rightBracket = document.getElementById("rightBracket");
+      if (show) {
+        leftBracket.style.display = "block";
+        rightBracket.style.display = "block";
+      } else {
+        leftBracket.style.display = "none";
+        rightBracket.style.display = "none";
+      }
+    }
+
+    // Fungsi tambahVektor, kurangVektor, dan dotProduct tetap sama
+    function tambahVektor(v1, v2) {
+      let maxLength = Math.max(v1.length, v2.length);
+      let result = [];
+      for (let i = 0; i < maxLength; i++) {
+        result.push((v1[i] || 0) + (v2[i] || 0));
+      }
+      return result;
+    }
+
+    function kurangVektor(v1, v2) {
+      let maxLength = Math.max(v1.length, v2.length);
+      let result = [];
+      for (let i = 0; i < maxLength; i++) {
+        result.push((v1[i] || 0) - (v2[i] || 0));
+      }
+      return result;
+    }
+
+    function dotProduct(v1, v2) {
+      if (v1.length !== v2.length) {
+        return "Vektor harus memiliki dimensi yang sama untuk produk dot";
+      }
+      let result = 0;
+      for (let i = 0; i < v1.length; i++) {
+        result += v1[i] * v2[i];
+      }
+      return [result];
+    }
+  </script>
+</body>
+
+</html>

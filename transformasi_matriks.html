@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Transformasi Elementer Matriks 3x3</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      margin: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .matriks-input {
+      margin-right: 5px;
+      margin-bottom: 5px;
+      width: 30px;
+    }
+
+    .matriks-row {
+      margin-bottom: 5px;
+    }
+
+    button {
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+
+    .hasil-matriks span {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Transformasi Elementer Matriks 3x3</h2>
+    <div id="matriksInput" class="matriks-input-container">
+      <!-- Input fields for matrix will be generated here -->
+    </div>
+
+    <!-- Row Operations -->
+    <div class="form-group">
+      <label for="baris">Pilih Baris (1-3):</label>
+      <input type="number" id="baris" min="1" max="3" value="1">
+      <button onclick="kaliBarisDenganSkalar()">Kali Baris dengan Skalar</button>
+    </div>
+
+    <!-- Column Operations -->
+    <div class="form-group">
+      <label for="kolom">Pilih Kolom (1-3):</label>
+      <input type="number" id="kolom" min="1" max="3" value="1">
+      <button onclick="kaliKolomDenganSkalar()">Kali Kolom dengan Skalar</button>
+    </div>
+
+    <!-- Row Swap Operations -->
+    <div class="form-group">
+      <label for="swapBaris1">Tukar Baris 1 (1-3):</label>
+      <input type="number" id="swapBaris1" min="1" max="3" value="1">
+      <label for="swapBaris2">dengan Baris 2 (1-3):</label>
+      <input type="number" id="swapBaris2" min="1" max="3" value="2">
+      <button onclick="tukarBaris()">Tukar Baris</button>
+    </div>
+
+    <!-- Column Swap Operations -->
+    <div class="form-group">
+      <label for="swapKolom1">Tukar Kolom 1 (1-3):</label>
+      <input type="number" id="swapKolom1" min="1" max="3" value="1">
+      <label for="swapKolom2">dengan Kolom 2 (1-3):</label>
+      <input type="number" id="swapKolom2" min="1" max="3" value="2">
+      <button onclick="tukarKolom()">Tukar Kolom</button>
+    </div>
+
+    <h3>Hasil Matriks:</h3>
+    <div id="hasilMatriks" class="hasil-matriks"></div>
+  </div>
+
+  <script>
+    function buatInputMatriks() {
+      let matriksInput = document.getElementById("matriksInput");
+      matriksInput.innerHTML = ''; // Bersihkan input yang ada
+
+      for (let i = 0; i < 3; i++) {
+        let rowDiv = document.createElement("div");
+        for (let j = 0; j < 3; j++) {
+          let input = document.createElement("input");
+          input.type = "number";
+          input.id = `elemen-${i}-${j}`;
+          input.className = "matriks-input";
+          rowDiv.appendChild(input);
+        }
+        matriksInput.appendChild(rowDiv);
+      }
+    }
+
+    function ambilNilaiMatriks() {
+      let matriks = [];
+      for (let i = 0; i < 3; i++) {
+        let baris = [];
+        for (let j = 0; j < 3; j++) {
+          let elemen = document.getElementById(`elemen-${i}-${j}`);
+          baris.push(parseFloat(elemen.value) || 0); // Parse nilai dan tangani NaN
+        }
+        matriks.push(baris);
+      }
+      return matriks;
+    }
+
+    function tukarBaris() {
+      let matriks = ambilNilaiMatriks();
+      let baris1 = parseInt(document.getElementById("swapBaris1").value, 10) - 1;
+      let baris2 = parseInt(document.getElementById("swapBaris2").value, 10) - 1;
+
+      for (let j = 0; j < 3; j++) {
+        let temp = matriks[baris1][j];
+        matriks[baris1][j] = matriks[baris2][j];
+        matriks[baris2][j] = temp;
+      }
+
+      tampilkanHasilMatriks(matriks);
+    }
+
+    function kaliBarisDenganSkalar() {
+      let matriks = ambilNilaiMatriks();
+      let baris = parseInt(document.getElementById("baris").value, 10) - 1; // Adjust for 0-based index
+      let skalar = parseFloat(prompt("Masukkan nilai skalar untuk perkalian baris:"));
+
+      for (let j = 0; j < 3; j++) {
+        matriks[baris][j] *= skalar;
+      }
+
+      tampilkanHasilMatriks(matriks);
+    }
+
+    function tukarKolom() {
+      let matriks = ambilNilaiMatriks();
+      let kolom1 = parseInt(document.getElementById("swapKolom1").value, 10) - 1;
+      let kolom2 = parseInt(document.getElementById("swapKolom2").value, 10) - 1;
+
+      for (let i = 0; i < 3; i++) {
+        let temp = matriks[i][kolom1];
+        matriks[i][kolom1] = matriks[i][kolom2];
+        matriks[i][kolom2] = temp;
+      }
+
+      tampilkanHasilMatriks(matriks);
+    }
+
+    function kaliKolomDenganSkalar() {
+      let matriks = ambilNilaiMatriks();
+      let kolom = parseInt(document.getElementById("kolom").value, 10) - 1; // Adjust for 0-based index
+      let skalar = parseFloat(prompt("Masukkan nilai skalar untuk perkalian kolom:"));
+
+      for (let i = 0; i < 3; i++) {
+        matriks[i][kolom] *= skalar;
+      }
+
+      tampilkanHasilMatriks(matriks);
+    }
+
+    function tampilkanHasilMatriks(matriks) {
+      let hasilMatriks = document.getElementById("hasilMatriks");
+      hasilMatriks.innerHTML = '';
+
+      for (let i = 0; i < 3; i++) {
+        let rowDiv = document.createElement("div");
+        rowDiv.className = "matriks-row";
+        for (let j = 0; j < 3; j++) {
+          let value = document.createElement("span");
+          value.textContent = matriks[i][j] + ' ';
+          rowDiv.appendChild(value);
+        }
+        hasilMatriks.appendChild(rowDiv);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      buatInputMatriks(); // Inisialisasi input matriks ketika halaman dimuat
+    });
+  </script>
+</body>
+
+</html>
